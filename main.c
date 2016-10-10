@@ -13,7 +13,6 @@ int main(int argc, char **argv)
     fnc1(0);
     fnc2(0);
 
-
     return 0;
 
 }

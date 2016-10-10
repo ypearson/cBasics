@@ -21,30 +21,47 @@
 # use ‘%’ to show how their names relate to the target name.
 # Thus, a pattern rule ‘%.o : %.c’ says how to make any file stem.o from another file stem.c.
 
+TARGET_PREFIX=
+CC        := $(TARGET_PREFIX)gcc
+AS        := $(TARGET_PREFIX)as
+LD        := $(TARGET_PREFIX)ld
+NM        := $(TARGET_PREFIX)nm
+OBJDUMP   := $(TARGET_PREFIX)objdump
+OBJCOPY   := $(TARGET_PREFIX)objcopy
+SIZE      := $(TARGET_PREFIX)size
+
 TOP=$(shell pwd)
+OUT=out
 TARGET=run
-CSRC=main.c        \
-	src1/module1.c \
-	src2/module2.c
+C_SOURCE_FILES +=                  \
+					main.c         \
+					src1/module1.c \
+					src2/module2.c \
 
-OBJ=$(CSRC:.c=.o)
+OBJ=$(OUT)/$(notdir $(C_SOURCE_FILES:.c=.o))
+$(info $(OBJ))
+INC_PATHS +=.\
+			src1 \
+			src2 \
 
-INC=.\
-	src1 \
-	src2
-
-CC=gcc
-CFLAGS=-c -Wall -Wextra -ggdb -I$(TOP) $(addprefix -I, $(INC))
+CFLAGS  +=-c
+CFLAGS  +=-Wall
+CFLAGS  +=-Wextra
+CFLAGS  +=-ggdb
+CFLAGS  +=$(addprefix -I, $(INC_PATHS))
+#LDFLAGS += -Xlinker -Map=output.map
 
 all: clean $(TARGET)
 
-%.o:%.c
+$(OUT)/%.o:%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 $(TARGET): $(OBJ)
-	$(CC) $^ -o $@
+	$(CC) $(LDFLAGS)  $^ -o $@
 
 clean:
+	@rm -rf $(OUT)
+	@mkdir -p $(OUT)
 	@find $(TOP) -type f -name "*.o"  -delete
 	@rm -f $(TARGET)
 	@echo "cleaned."
