@@ -23,12 +23,18 @@
 
 TOP=$(shell pwd)
 TARGET=run
-CSRC=main.c \
-	module1.c
+CSRC=main.c        \
+	src1/module1.c \
+	src2/module2.c
+
 OBJ=$(CSRC:.c=.o)
-INC=.
+
+INC=.\
+	src1 \
+	src2
+
 CC=gcc
-CFLAGS=-c -Wall -Wextra -ggdb -I$(TOP)
+CFLAGS=-c -Wall -Wextra -ggdb -I$(TOP) $(addprefix -I, $(INC))
 
 all: clean $(TARGET)
 

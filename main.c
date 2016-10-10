@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "module1.h"
+#include "module2.h"
 
 int main(int argc, char **argv)
 {
@@ -10,6 +11,7 @@ int main(int argc, char **argv)
 	}
 
     fnc1(0);
+    fnc2(0);
 
 
     return 0;
