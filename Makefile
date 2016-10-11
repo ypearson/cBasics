@@ -31,37 +31,34 @@ OBJCOPY   := $(TARGET_PREFIX)objcopy
 SIZE      := $(TARGET_PREFIX)size
 
 TOP=$(shell pwd)
-OUT=out
 TARGET=run
-C_SOURCE_FILES +=                  \
-					main.c         \
+C_SOURCE_FILES +=  	main.c         \
 					src1/module1.c \
 					src2/module2.c \
 
-OBJ=$(OUT)/$(notdir $(C_SOURCE_FILES:.c=.o))
-$(info $(OBJ))
+OBJ=$(C_SOURCE_FILES:.c=.o)
+
 INC_PATHS +=.\
 			src1 \
 			src2 \
 
-CFLAGS  +=-c
-CFLAGS  +=-Wall
-CFLAGS  +=-Wextra
-CFLAGS  +=-ggdb
-CFLAGS  +=$(addprefix -I, $(INC_PATHS))
-#LDFLAGS += -Xlinker -Map=output.map
+CFLAGS  = -c
+CFLAGS += -Wall
+CFLAGS += -Wextra
+CFLAGS += -ggdb
+CFLAGS += $(addprefix -I, $(INC_PATHS))
 
 all: clean $(TARGET)
 
-$(OUT)/%.o:%.c
-	$(CC) $(CFLAGS) $< -o $@
+%.o:%.c
+	$(CC) $(CFLAGS)  $< -o $@
 
 $(TARGET): $(OBJ)
-	$(CC) $(LDFLAGS)  $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $@
 
 clean:
-	@rm -rf $(OUT)
-	@mkdir -p $(OUT)
 	@find $(TOP) -type f -name "*.o"  -delete
 	@rm -f $(TARGET)
 	@echo "cleaned."
+
+.PHONY: clean
